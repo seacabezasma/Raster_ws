@@ -73,12 +73,62 @@ void draw() {
 void triangleRaster() {
   // frame.coordinatesOf converts from world to frame
   // here we convert v1 to illustrate the idea
+  
+  // Determinates rasterization area
+  int minX = floor(min(v1.x(), v2.x(), v3.x()));
+  int minY = floor(min(v1.y(), v2.y(), v3.y()));
+  
+  int maxX = floor(max(v1.x(), v2.x(), v3.x()));
+  int maxY = floor(max(v1.y(), v2.y(), v3.y()));
+  
+  Vector min = new Vector(minX, minY);
+  Vector max = new Vector(maxX, maxY);
+  
+  Vector sv1 = new Vector(frame.coordinatesOf(v1).x(), frame.coordinatesOf(v1).y());
+  Vector sv2 = new Vector(frame.coordinatesOf(v2).x(), frame.coordinatesOf(v2).y());
+  Vector sv3 = new Vector(frame.coordinatesOf(v3).x(), frame.coordinatesOf(v3).y());
+  
+  int minSysX = round(frame.coordinatesOf(min).x());
+  int minSysY = round(frame.coordinatesOf(min).y());
+  
+  int maxSysX = round(frame.coordinatesOf(max).x());
+  int maxSysY = round(frame.coordinatesOf(max).y());
+  
+  //float det = f_ab();
+  
+  for(int i = minSysX; i<maxSysX; i++){
+    for(int j = minSysY; j<maxSysY; j++){
+      
+      float alpha = f_ab(i, j, sv2, sv3) / f_ab(sv1.x(), sv1.y(), sv2, v3);
+      float theta = f_ab(i, j, sv3, sv1) / f_ab(sv2.x(), sv2.y(), sv3, sv1);
+      float gamma = f_ab(i, j, sv1, sv2) / f_ab(sv3.x(), sv3.y(), sv1, sv2);
+      
+      if(alpha >= 0 &&  alpha <= 1 && theta >= 0 &&  theta <= 1 && gamma >= 0 &&  gamma <= 1){
+        //Vector temp = new Vector(i, j);
+        pushStyle();
+        //set(i, j, color(255));
+        //stroke(255);
+        noStroke();
+        fill(255, 255, 255);
+        //point(i, j);
+        rect(i, j, 1, 1);
+        popStyle();
+      }
+      //println(i+" "+j);
+      
+    }
+  }
+  
   if (debug) {
     pushStyle();
     stroke(255, 255, 0, 125);
     point(round(frame.coordinatesOf(v1).x()), round(frame.coordinatesOf(v1).y()));
     popStyle();
   }
+}
+
+float f_ab(float a, float b, Vector pa, Vector pb){
+  return (pa.y() - pb.y()) * a + (pb.x() - pa.x()) * b + pa.x()*pb.y() - pb.x()*pa.y();
 }
 
 void randomizeTriangle() {
@@ -118,11 +168,11 @@ void keyPressed() {
   if (key == 'd')
     debug = !debug;
   if (key == '+') {
-    n = n < 7 ? n+1 : 2;
+    n = n < 8 ? n+1 : 2;
     frame.setScaling(width/pow( 2, n));
   }
   if (key == '-') {
-    n = n >2 ? n-1 : 7;
+    n = n >2 ? n-1 : 8;
     frame.setScaling(width/pow( 2, n));
   }
   if (key == 'r')
