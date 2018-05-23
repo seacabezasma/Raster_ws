@@ -94,14 +94,21 @@ void triangleRaster() {
   int maxSysX = round(frame.coordinatesOf(max).x());
   int maxSysY = round(frame.coordinatesOf(max).y());
   
-  //float det = f_ab();
+  float det = 0.5 * f_ab(sv3.x(), sv3.y(), sv1, sv2),
+    alpha, theta, gamma;
   
   for(int i = minSysX; i<maxSysX; i++){
     for(int j = minSysY; j<maxSysY; j++){
       
-      float alpha = f_ab(i, j, sv2, sv3) / f_ab(sv1.x(), sv1.y(), sv2, v3);
-      float theta = f_ab(i, j, sv3, sv1) / f_ab(sv2.x(), sv2.y(), sv3, sv1);
-      float gamma = f_ab(i, j, sv1, sv2) / f_ab(sv3.x(), sv3.y(), sv1, sv2);
+      if(det > 0){
+        alpha = f_ab(i, j, sv2, sv3) / f_ab(sv1.x(), sv1.y(), sv2, sv3);
+        theta = f_ab(i, j, sv3, sv1) / f_ab(sv2.x(), sv2.y(), sv3, sv1);
+        gamma = f_ab(i, j, sv1, sv2) / f_ab(sv3.x(), sv3.y(), sv1, sv2);
+      } else {
+        alpha = f_ab(i, j, sv2, sv1) / f_ab(sv3.x(), sv3.y(), sv2, sv1);
+        theta = f_ab(i, j, sv3, sv2) / f_ab(sv1.x(), sv1.y(), sv3, sv2);
+        gamma = f_ab(i, j, sv1, sv3) / f_ab(sv2.x(), sv2.y(), sv1, sv3);        
+      }
       
       if(alpha >= 0 &&  alpha <= 1 && theta >= 0 &&  theta <= 1 && gamma >= 0 &&  gamma <= 1){
         //Vector temp = new Vector(i, j);
