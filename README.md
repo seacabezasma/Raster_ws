@@ -42,6 +42,7 @@ El reto mayor consistió en lograr un margen aceptable de tolerancia para la esc
 Referencias:
 
 [Conservative Morphological Anti-Aliasing](https://software.intel.com/en-us/articles/conservative-morphological-anti-aliasing-cmaa-update)
+[The Barycentric Conspiracy](https://fgiesen.wordpress.com/2013/02/06/the-barycentric-conspirac/)
 
 ## Entrega
 
