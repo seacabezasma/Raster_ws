@@ -94,8 +94,13 @@ void triangleRaster() {
   int maxSysX = round(frame.coordinatesOf(max).x());
   int maxSysY = round(frame.coordinatesOf(max).y());
   
-  float det = 0.5 * f_ab(sv3.x(), sv3.y(), sv1, sv2),
+  float det = f_ab(sv3.x(), sv3.y(), sv1, sv2),
     alpha, theta, gamma;
+  
+  float a, b, c, tmp,
+    cv1 = color(0,255,0),
+    cv2 = color(255,0,0),
+    cv3 = color(0,0,255);
   
   for(int i = minSysX; i<maxSysX; i++){
     for(int j = minSysY; j<maxSysY; j++){
@@ -110,14 +115,22 @@ void triangleRaster() {
         gamma = f_ab(i, j, sv1, sv3) / f_ab(sv2.x(), sv2.y(), sv1, sv3);        
       }
       
-      if(alpha >= 0 &&  alpha <= 1 && theta >= 0 &&  theta <= 1 && gamma >= 0 &&  gamma <= 1){
-        //Vector temp = new Vector(i, j);
+      if(alpha > 0 && theta > 0 && gamma > 0){
+        a = map(alpha, 0, 1, 0, 255);
+        b = map(theta, 0, 1, 0, 255);
+        c = map(gamma, 0, 1, 0, 255);
+        
         pushStyle();
-        //set(i, j, color(255));
-        //stroke(255);
+        
+        //Apply custom anti-alias
+        if(alpha <= 0.01 || theta <= 0.01 || gamma <= 0.01){
+          tmp = min(alpha, theta, gamma);
+          fill((int) (a*(tmp/0.01)), (int) (b*(tmp/0.01)), (int) (c*(tmp/0.01)));
+          //fill(255, 255, 255);
+          }else{
+        fill((int) a, (int) b, (int) c);
+        }
         noStroke();
-        fill(255, 255, 255);
-        //point(i, j);
         rect(i, j, 1, 1);
         popStyle();
       }
